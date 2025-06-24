@@ -7,6 +7,9 @@ interface Task {
   title: string;
   description: string;
   completed: boolean;
+  start_date: string;
+  end_date: string;
+  pic: string[];
 }
 
 interface TaskStore {
@@ -25,12 +28,18 @@ const dummyTasks: Task[] = [
     title: "Dummy Task 1",
     description: "Description 1",
     completed: false,
+    start_date: "2025-06-12",
+    end_date: "2025-06-13",
+    pic: ["User 1", "User 2"],
   },
   {
     id: 2,
     title: "Dummy Task 2",
     description: "Description 2",
     completed: false,
+    start_date: "2025-06-12",
+    end_date: "2025-06-13",
+    pic: ["User 1"],
   },
 ];
 

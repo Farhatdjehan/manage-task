@@ -1,11 +1,25 @@
 import { useTaskStore } from "@/stores/taskStore";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
-const defaultTask = {
+type Task = {
+  id: number;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  pic: string[];
+  completed: boolean;
+};
+
+const defaultTask: Task = {
   id: 1,
   title: "",
   description: "",
+  start_date: dayjs().format("YYYY-MM-DD"),
+  end_date: "",
+  pic: [],
   completed: false,
 };
 
@@ -27,8 +41,15 @@ export default function Modal(props: ModalProps) {
       toast.error("Title is required!");
       return;
     }
+    if(clone.pic.length === 0) {
+       toast.error("PIC is required!");
+      return;
+    }
     if (getLast !== undefined) {
       clone.id = (getLast?.id ?? 0) + 1;
+      if (!clone.end_date) {
+        clone.end_date = dayjs().format("YYYY-MM-DD");
+      }
       addTask(clone);
     } else {
       addTask(clone);
@@ -42,8 +63,21 @@ export default function Modal(props: ModalProps) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setTaskData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    if (type === "checkbox") {
+      const input = e.target as HTMLInputElement;
+      setTaskData((prev) => {
+        let newPic = Array.isArray(prev.pic) ? [...prev.pic] : [];
+        if (input.checked) {
+          newPic.push(value);
+        } else {
+          newPic = newPic.filter((v) => v !== value);
+        }
+        return { ...prev, pic: newPic };
+      });
+    } else {
+      setTaskData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -106,7 +140,90 @@ export default function Modal(props: ModalProps) {
                           placeholder="Buy groceries..."
                         />
                       </div>
-
+                      <div className="flex gap-4 mb-4">
+                        <div className="w-1/2">
+                          <label
+                            htmlFor="start_date"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Start Date
+                          </label>
+                          <input
+                            id="start_date"
+                            type="date"
+                            name="start_date"
+                            value={taskData.start_date}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="w-1/2">
+                          <label
+                            htmlFor="end_date"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            End Date
+                          </label>
+                          <input
+                            id="end_date"
+                            type="date"
+                            name="end_date"
+                            value={taskData.end_date}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          PIC *
+                        </label>
+                        <input
+                          type="checkbox"
+                          id="user1"
+                          name="pic"
+                          value="User 1"
+                          checked={
+                            Array.isArray(taskData.pic) &&
+                            taskData.pic.includes("User 1")
+                          }
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="user1" className="ms-2">
+                          User 1
+                        </label>
+                        <br />
+                        <input
+                          type="checkbox"
+                          id="user2"
+                          name="pic"
+                          value="User 2"
+                          checked={
+                            Array.isArray(taskData.pic) &&
+                            taskData.pic.includes("User 2")
+                          }
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="user2" className="ms-2">
+                          User 2
+                        </label>
+                        <br />
+                        <input
+                          type="checkbox"
+                          id="user3"
+                          name="pic"
+                          value="User 3"
+                          checked={
+                            Array.isArray(taskData.pic) &&
+                            taskData.pic.includes("User 3")
+                          }
+                          onChange={handleChange}
+                        />
+                        <label htmlFor="user3" className="ms-2">
+                          User 3
+                        </label>
+                        <br />
+                      </div>
                       <div className="mb-4">
                         <label
                           htmlFor="description"
