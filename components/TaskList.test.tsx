@@ -7,6 +7,9 @@ type Task = {
   title: string;
   description?: string;
   completed: boolean;
+  pic: string[];
+  start_date: string;
+  end_date: string;
 };
 
 // Mock the task store module
@@ -22,8 +25,24 @@ const mockUseTaskStore = useTaskStore as jest.MockedFunction<
 describe("TaskList Component", () => {
   // Sample tasks data
   const sampleTasks: Task[] = [
-    { id: 1, title: "Task 1", description: "Description 1", completed: false },
-    { id: 2, title: "Task 2", description: "Description 2", completed: true },
+    {
+      id: 1,
+      title: "Task 1",
+      description: "Description 1",
+      completed: false,
+      pic: ["User 1"],
+      start_date: "2025-06-12",
+      end_date: "2025-06-13",
+    },
+    {
+      id: 2,
+      title: "Task 2",
+      description: "Description 2",
+      completed: true,
+      pic: ["User 1", "User 2"],
+      start_date: "2025-06-12",
+      end_date: "2025-06-15",
+    },
   ];
 
   beforeEach(() => {

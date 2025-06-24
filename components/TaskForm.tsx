@@ -2,12 +2,16 @@
 import { useState } from "react";
 import { useTaskStore } from "../stores/taskStore";
 import { toast } from "react-hot-toast";
+import dayjs from "dayjs";
 //  // Install with: npm install react-hot-toast
 
 const defaultTask = {
   id: 1,
   title: "",
   description: "",
+  start_date: dayjs().format("YYYY-MM-DD"),
+  end_date: "",
+  pic: [],
   completed: false,
 };
 
@@ -25,6 +29,9 @@ export const TaskForm = () => {
     }
     if (getLast !== undefined) {
       clone.id = (getLast?.id ?? 0) + 1;
+      if (!clone.end_date) {
+        clone.end_date = dayjs().format("YYYY-MM-DD");
+      }
       addTask(clone);
       setTaskData(defaultTask);
     } else {
